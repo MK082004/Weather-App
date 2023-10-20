@@ -1,0 +1,11 @@
+<div class="app-container">
+  <div class="weather-container">
+    <div class="left-container">
+      <app-left-container (populationPercentageUpdated)="updatePopulationPercentage($event)"></app-left-container>
+    </div>
+    
+    <div class="right-container">
+      <app-right-container [populationPercentage]="populationPercentage"></app-right-container>
+    </div>
+  </div>
+</div>

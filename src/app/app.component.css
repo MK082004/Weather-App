@@ -1,0 +1,58 @@
+.app-container{
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--light-grey);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weather-container{
+    height: auto;
+    width: 65vw;
+    display: flex;
+    flex-wrap: wrap;  
+}
+
+.left-container{
+    flex: 3;
+    background-color: var(--white);
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.right-container{
+    flex: 7;
+    background-color: var(--light-grey1);
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+@media (max-width: 1360px) {
+    .weather-container{
+        height: auto;
+        width: 90vw;
+    }
+}
+
+/* MobileScreen responsive Css 767px media size */
+@media (max-width: 900px) {
+    .app-container{
+        height: auto;
+    }
+
+    .weather-container{
+        width: 100vw;
+        flex-direction: column;
+    }
+
+    .left-container,
+    .right-container{
+        width: 100%;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+/* MobileScreen responsive Css 1360px media size */

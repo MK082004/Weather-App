@@ -1,0 +1,42 @@
+<div class="left-container" *ngIf="weatherNow">
+    <div class="left-container-navbar">
+        <div class="row">
+            <div class="col-12">
+                <form (ngSubmit)="searchWeatherByCountry()">
+                    <i><fa-icon [icon]="faMagnifyingGlass"></fa-icon></i>
+                    <input type="text" placeholder="Enter Country" [(ngModel)]="searchCountry" name="searchCountry" />
+                    <button type="submit"><fa-icon [icon]="faLocation"></fa-icon></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-container-content-area">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center mt-2">
+                <img src="assets/images/{{weatherNow.weather[0].icon}}.png" alt="">
+            </div>
+            <div class="col-12">
+                {{ selectedUnitTemp === 'F' ? (weatherNow.main.temp * 9/5 + 32 | number: '1.0-0') : weatherNow.main.temp | number: '1.0-0' }}<sup>&deg;{{ selectedUnitTemp }}</sup>
+            </div>
+            <div class="col-12">
+                <p>{{ formattedDay }}</p><i>,</i><span>{{ formattedTime }}</span>
+            </div>
+        </div>
+        <hr>
+        <div class="row image-section">
+            <div class="col-12">
+                <fa-icon [icon]="faCloud"></fa-icon>
+                <span>Mostly {{weatherNow.weather[0].main}}</span>
+            </div>
+            <div class="col-12">
+                <fa-icon [icon]="faCloudRain"></fa-icon>
+                <span>Rain - {{ rainPercentage.toFixed(0) }}%</span>
+            </div>
+            <div class="col-12 countryImage">
+                <img [src]="countryImage" alt="">
+                <span class="countryname">{{location.name}}, {{location.country}}</span>
+            </div>
+        </div>
+    </div>
+</div>

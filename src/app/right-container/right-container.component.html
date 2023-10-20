@@ -1,0 +1,152 @@
+<div class="right-container">
+    <!-- right container navbar section here -->
+    <div class="right-container-navbar">
+        <div class="row h-100">
+            <!-- top-bar section here -->
+            <div class="col-12 d-flex">
+                <div class="col-6 d-flex align-items-center">
+                    <ul>
+                        <li>
+                            <span class="today" (click)="OnTodayClick()"
+                                [className]="today == true?'today today-active' : 'today'">Today</span>
+                        </li>
+                        <li>
+                            <span class="week" (click)="OnWeekClick()"
+                                [className]="week == true?'week week-active' : 'week'">Week</span>
+                        </li>
+                        <div class="underline"
+                            [className]="week == true?'underline underline-today' : 'underline underline-week'"></div>
+                    </ul>
+                </div>
+
+                <div class="col-6 d-flex align-items-center justify-content-end">
+                    <ul>
+                        <li>
+                            <span class="celsius" (click)="OnCelsiusClick()"
+                                [className]="selectedUnit === 'C'? 'celsius celsius-active' : 'celsius'">&deg;C</span>
+                        </li>
+                        <li>
+                            <span class="fahrenheit" (click)="OnFahrenheitClick()"
+                                [className]="selectedUnit === 'F'? 'fahrenheit fahrenheit-active' : 'fahrenheit'">&deg;F</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- cards section here -->
+            <div class="col-12 mt-4" *ngIf="weatherData">
+                <!-- week card section here -->
+                <div class="col-12" *ngIf="week == true">
+                    <div class="card" *ngFor="let forecast of weatherData">
+                        <div class="card-title">{{ forecast.dt_txt | date:'EEE' }}</div>
+                        <div class="card-image">
+                            <img src="assets/images/{{forecast.weather[0].icon}}.png" alt="icon">
+                        </div>
+                        <div class="card-deatils">
+                            <span class="temp-max">{{ selectedUnitTemp === 'Fahrenheit' ? (forecast.main.temp_max * 9/5
+                                + 32 | number: '1.0-0') : forecast.main.temp_max | number: '1.0-0' }}&deg;<sup>{{
+                                    selectedUnit }}</sup></span>
+                            -
+                            <span class="temp-min">{{ selectedUnitTemp === 'Fahrenheit' ? (forecast.main.temp_min * 9/5
+                                + 32 | number: '1.0-0') : forecast.main.temp_min | number: '1.0-0' }}&deg;<sup>{{
+                                    selectedUnit }}</sup></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- today card section here -->
+                <div class="col-12" *ngIf="today == true">
+                    <div class="card" *ngFor="let item of timeline">
+                        <div class="card-title">{{ item.time | date:'h:mm a' }}</div>
+                        <div class="card-image">
+                            <img src="assets/images/{{weatherNow.weather[0].icon}}.png" alt="">
+                        </div>
+                        <div class="card-deatils">
+                            {{ selectedUnitTemp === 'Fahrenheit' ? (item.temp * 9/5 + 32 | number: '1.0-0') : item.temp
+                            | number: '1.0-0' }}&deg;<sup>{{ selectedUnit }}</sup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- right container highlights section here -->
+    <div class="right-container-highlights h-100">
+        <div class="row">
+            <div class="col-12">Today's Highlights</div>
+        </div>
+
+        <div class="row" *ngIf="weatherNow">
+            <div class="card">
+                <div class="card-title">Feels Like</div>
+                <div class="card-value">{{ selectedUnitTemp === 'Fahrenheit' ? (weatherNow.main.feels_like * 9/5 +
+                    32 | number: '1.0-0') : weatherNow.main.feels_like | number: '1.0-0' }}&deg;<sup>{{ selectedUnit
+                        }}</sup></div>
+                <div class="card-details">{{weatherNow.weather[0].main}}<img
+                        src="assets/images/{{weatherNow.weather[0].icon}}.png" alt="" height="30px" width="30px">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Wind Status</div>
+                <div class="card-value"> {{ getFormattedWindSpeed() }}
+                    <span *ngIf="selectedUnitTemp === 'Fahrenheit'">mph</span>
+                    <span *ngIf="selectedUnitTemp === 'Celsius'">km/h</span>
+                </div>
+                <div class="card-details"><fa-icon [icon]="faLocationDot"></fa-icon>{{location.country}}</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Sunrise & Sunset</div>
+                <div class="card-value"><fa-icon [icon]="faArrowCircleUp"></fa-icon>
+                    {{ sunriseTime }}
+                </div>
+                <div class="card-details"><fa-icon [icon]="faArrowCircleDown"></fa-icon>
+                    {{ sunsetTime }}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Humidity</div>
+                <div class="card-value">{{ weatherNow.main.humidity }}<sup>&percnt;</sup></div>
+                <div class="card-details">
+                    <ng-container *ngIf="weatherNow.main.humidity !== undefined">
+                        {{ determineHumidityMessage(weatherNow.main.humidity) }}
+                        <fa-icon [icon]="weatherNow.main.humidity >= 60 ?faThumbsUp : faThumbsDown"></fa-icon>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Visibility</div>
+                <div class="card-value">{{ getFormattedVisibility() }}
+                    <span *ngIf="selectedUnitTemp === 'Fahrenheit'">mi</span>
+                    <span *ngIf="selectedUnitTemp === 'Celsius'">Km</span>
+                </div>
+                <div class="card-details">
+                    <ng-container *ngIf="message === 'Normal'">
+                        <div>Normal</div>
+                    </ng-container>
+                    <ng-container *ngIf="message === 'Average'">
+                        <div>Average</div>
+                    </ng-container>
+                    <ng-container *ngIf="message === 'Good'">
+                        <div>Good</div>
+                    </ng-container>
+                    <fa-icon [icon]="faFaceFlushed"></fa-icon>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Air Quality</div>
+                <div class="card-value">{{ populationPercentage.toFixed(0) }}<span>&percnt;</span>
+                </div>
+                <div class="card-details">
+                    {{ populationPercentage <= 20 ? 'Good' : (populationPercentage <=80 ? 'Normal' : 'Bad' ) }} <fa-icon
+                        [icon]="populationPercentage <= 20 ?faThumbsUp : faThumbsDown"></fa-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
